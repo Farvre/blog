@@ -14,12 +14,9 @@ const { post } = Astro.props;
 const { Content } = await render(post);
 const fmt = new Intl.DateTimeFormat('zh-CN', { year: 'numeric', month: 'long', day: 'numeric' });
 
-// ====== 评论系统配置（重要）=====
-// 当前使用：Waline（免登录，任何访客都能评论）
-// 备选：Giscus（GitHub 登录评论）——切换方法见 使用说明.md
-// WALINE_SERVER 在部署时配置为你的评论服务器地址（例如 https://xxx.vercel.app）
-// 未配置时不加载评论（网站仍可用）
-const WALINE_SERVER = import.meta.env.WALINE_SERVER ?? ''; // 例如 https://xxx.vercel.app
+// ====== 评论系统 ======
+// 当前使用：Giscus（GitHub 登录评论，免费、稳定、与博客同属 GitHub 生态）
+// 备选：Waline（免登录，填昵称即可）——若未来想换，替换下面评论区的 script 即可
 ---
 
 <Layout title={post.data.title} description={post.data.description}>
@@ -54,16 +51,35 @@ const WALINE_SERVER = import.meta.env.WALINE_SERVER ?? ''; // 例如 https://xxx
     <div id="comments" style="margin-top:40px">
       <h2 style="margin-bottom:16px">💬 评论</h2>
 
-      <!-- 当前使用：Waline 免登录评论 -->
-      <div id="waline-container"></div>
+      <!-- 当前使用：Giscus（用 GitHub 账号登录评论，免费） -->
+      <!-- 访客点进评论区，用 GitHub 登录即可评论/回复。 -->
+      <script
+        src="https://giscus.app/client.js"
+        data-repo="Farvre/blog"
+        data-repo-id="R_kgDOUpq0Jw"
+        data-category="Announcements"
+        data-category-id="DIC_kwDOUpq0J84DGULH"
+        data-mapping="pathname"
+        data-strict="0"
+        data-reactions-enabled="1"
+        data-emit-metadata="0"
+        data-input-position="bottom"
+        data-theme="preferred_color_scheme"
+        data-lang="zh-CN"
+        crossorigin="anonymous"
+        async
+      >
+      </script>
 
-      <!-- 备选：Giscus（若要切换，取消下面注释并注释上面 Waline 脚本）-->
-      <!-- <div id="giscus-container"></div> -->
+      <!-- 备选：Waline（免登录评论）——若未来想换，用下面这段替代上面的 giscus script
+      <div id="waline-container"></div>
+      <script>（加载 @waline/client 并初始化的代码）</script>
+      -->
     </div>
   </article>
 </Layout>
 
-<script define:vars={{ WALINE_SERVER }}>
+<script>
   // ====== 点赞功能 ======
   // 点赞数存浏览器本地，每个人自己点，简单可靠
   // 真实全网点赞数需要后端，如要用可后续升级
@@ -100,29 +116,4 @@ const WALINE_SERVER = import.meta.env.WALINE_SERVER ?? ''; // 例如 https://xxx
     if (localStorage.getItem('liked_' + slug)) btn.classList.add('liked');
   }
   initLike();
-
-  // ====== Waline 评论（免登录）======
-  // 需要 CDN 加载 Waline。serverURL 若没配置则不加载
-  const serverURL = WALINE_SERVER;
-  if (serverURL) {
-    const link = document.createElement('link');
-    link.rel = 'stylesheet';
-    link.href = 'https://unpkg.com/@waline/client@v3/dist/waline.css';
-    document.head.appendChild(link);
-    const script = document.createElement('script');
-    script.src = 'https://unpkg.com/@waline/client@v3/dist/waline.js';
-    script.onload = () => {
-      if (window.Waline) {
-        window.Waline.init({
-          el: '#waline-container',
-          serverURL,
-          lang: 'zh-CN',
-          pageSize: 20,
-          dark: 'auto',
-          emoji: ['/emoji-wechat', '/emoji-qq'],
-        });
-      }
-    };
-    document.head.appendChild(script);
-  }
 </script>
