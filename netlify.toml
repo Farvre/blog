@@ -5,10 +5,6 @@
   command = "npm run build"
   publish = "dist"
 
-# 重要：让 /admin/ 后台在直接访问/刷新时不 404
-# （Decap CMS 是单页应用，需要把所有 /admin/* 路由回退到它的 index.html）
-[[redirects]]
-  from = "/admin/*"
-  to = "/admin/index.html"
-  status = 200
-  force = true
+# Decap CMS 是静态页 + 直接请求 /admin/config.yml，Netlify 静态服务原生支持，
+# 无需 SPA 通配重定向（避免通配符把真实文件 config.yml 拦走）。
+# 若未来遇到 /admin/ 下 404，可在此增加精确回退。
