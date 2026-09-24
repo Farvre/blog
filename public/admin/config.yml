@@ -18,7 +18,7 @@ media_library:
 # 后台界面语言
 locale: "zh_Hans"
 
-site_url: "https://YOUR_SITE.netlify.app"
+site_url: "https://stupendous-churros-30f900.netlify.app"
 
 # 收藏/编辑器字体等不需要配置
 
