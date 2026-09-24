@@ -1,0 +1,14 @@
+# Netlify 部署配置
+# 构建命令和输出目录，Netlify 会自动读取
+
+[build]
+  command = "npm run build"
+  publish = "dist"
+
+# 重要：让 /admin/ 后台在直接访问/刷新时不 404
+# （Decap CMS 是单页应用，需要把所有 /admin/* 路由回退到它的 index.html）
+[[redirects]]
+  from = "/admin/*"
+  to = "/admin/index.html"
+  status = 200
+  force = true
