@@ -1,0 +1,42 @@
+# ==========================================
+# Decap CMS 发帖后台配置
+# 访问 你的网站/admin/ 打开可视化发帖后台
+# ==========================================
+
+# 后端：用 Netlify Identity 做身份认证（开箱即用，推荐）
+# 需要你在 netlify.com 后台开启 Identity 服务并配置站点 URL（我会引导）
+backend:
+  name: git-gateway  # git-gateway 配合 Netlify Identity，自动连通 GitHub
+
+# 媒体文件（图片/视频）上传位置
+media_folder: "public/uploads"              # 图片实际存储路径（上传到 GitHub 仓库）
+public_folder: "/uploads"                    # 网站访问图片的路径
+media_library:
+  name: ""
+  config: {}
+
+# 后台界面语言
+locale: "zh_Hans"
+
+site_url: "https://YOUR_SITE.netlify.app"
+
+# 收藏/编辑器字体等不需要配置
+
+collections:
+  # ============ 博客文章集合 ============
+  - name: "posts"                    # 与 src/content/posts/ 对应
+    label: "文章"
+    folder: "src/content/posts"      # 文章保存位置（Markdown 文件都在这里）
+    create: true                     # 允许新建
+    slug: "{{year}}-{{month}}-{{day}}-{{slug}}"  # 文件名：日期-标题
+    path: "{{slug}}"                 # 文件名
+    editor:
+      preview: true                  # 右侧实时预览
+    fields:
+      - { label: "标题", name: "title", widget: "string", required: true }
+      - { label: "内容", name: "body", widget: "markdown", required: true }
+      - { label: "一句话简介（显示在首页卡片）", name: "description", widget: "text", required: false }
+      - { label: "发布日期", name: "pubDate", widget: "date", format: "YYYY-MM-DD" }
+      - { label: "标签（用逗号分隔）", name: "tags", widget: "list", required: false }
+      - { label: "封面图", name: "cover", widget: "image", required: false, choose_url: true }
+      - { label: "草稿（保存但是不发布）", name: "draft", widget: "boolean", default: false, required: false }

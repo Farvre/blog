@@ -1,0 +1,46 @@
+---
+import Layout from '../layouts/Layout.astro';
+import { getCollection } from 'astro:content';
+
+// 获取所有帖子，按日期倒序
+const posts = (await getCollection('posts'))
+  .filter((p) => !p.data.draft)
+  .sort((a, b) => (b.data.pubDate ?? new Date(0)) - (a.data.pubDate ?? new Date(0)));
+
+const fmt = new Intl.DateTimeFormat('zh-CN', { year: 'numeric', month: 'long', day: 'numeric' });
+---
+
+<Layout title="首页" description="我的博客，分享生活与想法">
+  <div class="post-index-top">
+    <h1>📝 全部文章</h1>
+    <p>共 {posts.length} 篇 · 点击标题阅读全文 · <a href="/admin/" style="color:var(--accent)">✍️ 去发一篇文章</a></p>
+    </div>
+
+  {
+    posts.length > 0 ? (
+      <div class="post-list">
+        {posts.map((post) => (
+          <a class="post-card" href={`/posts/${post.id}/`}>
+            {post.data.cover && <img class="post-cover" src={post.data.cover} alt="" loading="lazy" />}
+            <div class="post-card-body">
+              <h2 class="post-title">{post.data.title}</h2>
+              {post.data.description && <p class="post-desc">{post.data.description}</p>}
+              <div class="post-meta">
+                {post.data.pubDate && <span>🗓 {fmt.format(post.data.pubDate)}</span>}
+                {
+                  post.data.tags?.map((t) => (
+                    <span class="tag">#{t}</span>
+                  ))
+                }
+              </div>
+            </div>
+          </a>
+        ))}
+      </div>
+    ) : (
+      <div class="empty">
+        <p>还没有文章。去 <code>src/content/posts/</code> 放一篇吧，或者运行 <code>npm run new-post</code> 自动创建。</p>
+      </div>
+    )
+  }
+</Layout>

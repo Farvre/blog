@@ -1,0 +1,128 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import { getCollection, render } from 'astro:content';
+
+export async function getStaticPaths() {
+  const posts = await getCollection('posts');
+  return posts.map((post) => ({
+    params: { slug: post.id },
+    props: { post },
+  }));
+}
+
+const { post } = Astro.props;
+const { Content } = await render(post);
+const fmt = new Intl.DateTimeFormat('zh-CN', { year: 'numeric', month: 'long', day: 'numeric' });
+
+// ====== 评论系统配置（重要）=====
+// 当前使用：Waline（免登录，任何访客都能评论）
+// 备选：Giscus（GitHub 登录评论）——切换方法见 使用说明.md
+// WALINE_SERVER 在部署时配置为你的评论服务器地址（例如 https://xxx.vercel.app）
+// 未配置时不加载评论（网站仍可用）
+const WALINE_SERVER = import.meta.env.WALINE_SERVER ?? ''; // 例如 https://xxx.vercel.app
+---
+
+<Layout title={post.data.title} description={post.data.description}>
+  <article>
+    <header class="post-header">
+      <div class="post-meta" style="margin-bottom:10px">
+        {post.data.pubDate && <span>🗓 {fmt.format(post.data.pubDate)}</span>}
+        {post.data.tags?.map((t) => <span class="tag">#{t}</span>)}
+      </div>
+      <h1>{post.data.title}</h1>
+      {post.data.description && <p style="color:var(--muted)">{post.data.description}</p>}
+    </header>
+
+    {post.data.cover && <img class="post-single-cover" src={post.data.cover} alt="" />}
+
+    <div class="prose">
+      <Content />
+    </div>
+
+    <!-- 点赞按钮 -->
+    <div class="like-wrap" data-post-slug={post.id}>
+      <button
+        class="like-btn"
+        id="like-btn"
+        aria-label="点赞"
+        onclick="toggleLike()"
+      >👍 <span id="like-display">0</span></button>
+      <span class="like-count">点个赞支持一下～</span>
+    </div>
+
+    <!-- 评论 -->
+    <div id="comments" style="margin-top:40px">
+      <h2 style="margin-bottom:16px">💬 评论</h2>
+
+      <!-- 当前使用：Waline 免登录评论 -->
+      <div id="waline-container"></div>
+
+      <!-- 备选：Giscus（若要切换，取消下面注释并注释上面 Waline 脚本）-->
+      <!-- <div id="giscus-container"></div> -->
+    </div>
+  </article>
+</Layout>
+
+<script define:vars={{ WALINE_SERVER }}>
+  // ====== 点赞功能 ======
+  // 点赞数存浏览器本地，每个人自己点，简单可靠
+  // 真实全网点赞数需要后端，如要用可后续升级
+  window.toggleLike = function () {
+    const slug = document.querySelector('.like-wrap')?.dataset.postSlug;
+    if (!slug) return;
+    const KEY = 'liked_' + slug;
+    const display = document.getElementById('like-display');
+    const btn = document.getElementById('like-btn');
+    const storageKey = 'like_count_' + slug;
+    let count = parseInt(localStorage.getItem(storageKey) || '0', 10);
+    if (localStorage.getItem(KEY)) {
+      // 取消点赞
+      count = Math.max(0, count - 1);
+      localStorage.removeItem(KEY);
+      btn.classList.remove('liked');
+    } else {
+      count += 1;
+      localStorage.setItem(KEY, '1');
+      btn.classList.add('liked');
+    }
+    localStorage.setItem(storageKey, String(count));
+    display.textContent = count;
+  };
+
+  // 页面加载时显示已存的点赞数
+  function initLike() {
+    const display = document.getElementById('like-display');
+    const btn = document.getElementById('like-btn');
+    const slug = document.querySelector('.like-wrap')?.dataset.postSlug;
+    if (!slug) return;
+    const count = parseInt(localStorage.getItem('like_count_' + slug) || '0', 10);
+    display.textContent = count;
+    if (localStorage.getItem('liked_' + slug)) btn.classList.add('liked');
+  }
+  initLike();
+
+  // ====== Waline 评论（免登录）======
+  // 需要 CDN 加载 Waline。serverURL 若没配置则不加载
+  const serverURL = WALINE_SERVER;
+  if (serverURL) {
+    const link = document.createElement('link');
+    link.rel = 'stylesheet';
+    link.href = 'https://unpkg.com/@waline/client@v3/dist/waline.css';
+    document.head.appendChild(link);
+    const script = document.createElement('script');
+    script.src = 'https://unpkg.com/@waline/client@v3/dist/waline.js';
+    script.onload = () => {
+      if (window.Waline) {
+        window.Waline.init({
+          el: '#waline-container',
+          serverURL,
+          lang: 'zh-CN',
+          pageSize: 20,
+          dark: 'auto',
+          emoji: ['/emoji-wechat', '/emoji-qq'],
+        });
+      }
+    };
+    document.head.appendChild(script);
+  }
+</script>
