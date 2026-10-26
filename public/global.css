@@ -22,7 +22,7 @@
   --shadow-hover: 0 4px 12px rgba(35, 120, 184, 0.10), 0 16px 36px rgba(35, 120, 184, 0.14);
   --max-width: 720px;
   --font-body: 'Google Sans', 'Noto Sans SC', 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', sans-serif;
-  --font-head: 'Google Sans', 'Noto Serif SC', 'Songti SC', 'SimSun', serif;
+  --font-head: 'Google Sans', 'Noto Sans SC', 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', sans-serif;
 }
 @media (prefers-color-scheme: dark) {
   :root {
@@ -46,6 +46,7 @@
 html { -webkit-text-size-adjust: 100%; scroll-behavior: smooth; }
 body {
   font-family: var(--font-body);
+  font-weight: 450;
   background: var(--bg);
   background-image: radial-gradient(1100px 380px at 18% -8%, var(--baby-soft), transparent 65%);
   background-repeat: no-repeat;
