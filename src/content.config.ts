@@ -19,6 +19,10 @@ const posts = defineCollection({
     pubDate: z.preprocess((v) => (v == null || v === '' ? undefined : v), z.coerce.date().optional()),
     // 分类：suibi=随笔，shiji=事记，memo=memo。不写默认算随笔
     category: z.enum(['suibi', 'shiji', 'memo']).optional().default('suibi'),
+    // 作者署名（不写默认 shuangyun）
+    author: z.string().optional().default('shuangyun'),
+    // 是不是 AI 生成的文章？true = 显示「由 xxx 生成」，false = 显示「由 xxx 写」
+    generated: z.boolean().optional().default(false),
     // 标签数组
     tags: z.array(z.string()).optional(),
     // 草稿

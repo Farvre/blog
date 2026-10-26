@@ -1,6 +1,7 @@
 ---
 // 文章卡片列表（首页和三个分类页共用）
 import { categories } from '../site.config';
+import { postStats, fmtDate } from '../lib/post-stats';
 import type { CollectionEntry } from 'astro:content';
 
 interface Props {
@@ -8,22 +9,33 @@ interface Props {
   showCategory?: boolean;
 }
 const { posts, showCategory = false } = Astro.props;
-const fmt = new Intl.DateTimeFormat('zh-CN', { year: 'numeric', month: 'long', day: 'numeric' });
 ---
 
 <div class="post-list">
-  {posts.map((post) => (
-    <a class="post-card" href={`/posts/${post.id}/`}>
-      {post.data.cover && <img class="post-cover" src={post.data.cover} alt="" loading="lazy" />}
-      <div class="post-card-body">
-        <h2 class="post-title">{post.data.title}</h2>
-        {post.data.description && <p class="post-desc">{post.data.description}</p>}
-        <div class="post-meta">
-          {post.data.pubDate && <span class="date">{fmt.format(post.data.pubDate)}</span>}
-          {showCategory && <span class="cat-chip">{categories[post.data.category].label}</span>}
-          {post.data.tags?.map((t) => <span class="tag">#{t}</span>)}
+  {posts.map((post) => {
+    const stats = postStats(post.body);
+    const byline = `由 ${post.data.author} ${post.data.generated ? '生成' : '写'}`;
+    return (
+      <a class="post-card" href={`/posts/${post.id}/`}>
+        {post.data.cover && <img class="post-cover" src={post.data.cover} alt="" loading="lazy" />}
+        <div class="post-card-body">
+          <h2 class="post-title">{post.data.title}</h2>
+          {post.data.description && <p class="post-desc">{post.data.description}</p>}
+          <div class="post-meta">
+            {post.data.pubDate && <span class="date">{fmtDate(post.data.pubDate)}</span>}
+            <span class="meta-sep">·</span>
+            <span>读完约 {stats.minutes} 分钟</span>
+            <span class="meta-sep">·</span>
+            <span>{stats.words.toLocaleString('zh-CN')} 字</span>
+            <span class="meta-sep">·</span>
+            <span>{byline}</span>
+          </div>
+          <div class="post-meta" style="margin-top:10px">
+            {showCategory && <span class="cat-chip">{categories[post.data.category].label}</span>}
+            {post.data.tags?.map((t) => <span class="tag">#{t}</span>)}
+          </div>
         </div>
-      </div>
-    </a>
-  ))}
+      </a>
+    );
+  })}
 </div>

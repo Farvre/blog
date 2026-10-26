@@ -3,6 +3,8 @@ title: "欢迎来到我的博客"
 description: "这是第一篇文章，教你如何发文字、图片和视频"
 pubDate: 2026-09-24
 category: suibi
+author: "mimo-v2.6-pro"
+generated: true
 tags: ["公告", "教程"]
 cover: ""
 ---
