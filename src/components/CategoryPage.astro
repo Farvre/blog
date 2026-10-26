@@ -1,0 +1,30 @@
+---
+// 分类页模板（随笔 / 事记 / memo 共用）
+import Layout from '../layouts/Layout.astro';
+import PostList from '../components/PostList.astro';
+import { categories, type CategoryKey } from '../site.config';
+import { getCollection } from 'astro:content';
+
+interface Props {
+  category: CategoryKey;
+}
+const { category } = Astro.props;
+const info = categories[category];
+const posts = (await getCollection('posts'))
+  .filter((p) => !p.data.draft && p.data.category === category)
+  .sort((a, b) => (b.data.pubDate ?? new Date(0)) - (a.data.pubDate ?? new Date(0)));
+---
+
+<Layout title={info.label} description={info.intro}>
+  <header class="cat-header">
+    <h1>{info.label}<span class="accent-bar"></span></h1>
+    <p class="lead">{info.intro} · 共 {posts.length} 篇</p>
+  </header>
+  {posts.length > 0 ? (
+    <PostList posts={posts} />
+  ) : (
+    <div class="empty">
+      <p>这里还没有文章。发帖时在开头写上 <code>category: {category}</code>，文章就会出现在这里。</p>
+    </div>
+  )}
+</Layout>

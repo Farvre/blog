@@ -1,46 +1,40 @@
 ---
+// 首页：显示哪些分类由 src/site.config.ts 的 homeCategories 决定
 import Layout from '../layouts/Layout.astro';
+import PostList from '../components/PostList.astro';
+import { siteConfig, categories, type CategoryKey } from '../site.config';
 import { getCollection } from 'astro:content';
 
-// 获取所有帖子，按日期倒序
-const posts = (await getCollection('posts'))
+const all = (await getCollection('posts'))
   .filter((p) => !p.data.draft)
   .sort((a, b) => (b.data.pubDate ?? new Date(0)) - (a.data.pubDate ?? new Date(0)));
 
-const fmt = new Intl.DateTimeFormat('zh-CN', { year: 'numeric', month: 'long', day: 'numeric' });
+const hc = siteConfig.homeCategories;
+const posts = hc === 'all'
+  ? all
+  : all.filter((p) => Array.isArray(hc) ? hc.includes(p.data.category) : p.data.category === hc);
+
+const scopeLabel = hc === 'all'
+  ? '全部文章'
+  : Array.isArray(hc)
+    ? hc.map((k) => categories[k].label).join(' / ')
+    : categories[hc as CategoryKey].label;
 ---
 
 <Layout title="首页" description="我的博客，分享生活与想法">
   <div class="post-index-top">
-    <h1>📝 全部文章</h1>
-    <p>共 {posts.length} 篇 · 点击标题阅读全文 · <a href="https://github.com/Farvre/blog/blob/main/templates/发帖模板.md" target="_blank" style="color:var(--accent)">✍️ 去发一篇文章</a></p>
-    </div>
+    <h1>{scopeLabel}<span class="accent-bar"></span></h1>
+    <p class="lead">
+      共 {posts.length} 篇 · 点击标题阅读全文 ·
+      <a href="https://github.com/Farvre/blog/blob/main/templates/发帖模板.md" target="_blank">发一篇文章</a>
+    </p>
+  </div>
 
-  {
-    posts.length > 0 ? (
-      <div class="post-list">
-        {posts.map((post) => (
-          <a class="post-card" href={`/posts/${post.id}/`}>
-            {post.data.cover && <img class="post-cover" src={post.data.cover} alt="" loading="lazy" />}
-            <div class="post-card-body">
-              <h2 class="post-title">{post.data.title}</h2>
-              {post.data.description && <p class="post-desc">{post.data.description}</p>}
-              <div class="post-meta">
-                {post.data.pubDate && <span>🗓 {fmt.format(post.data.pubDate)}</span>}
-                {
-                  post.data.tags?.map((t) => (
-                    <span class="tag">#{t}</span>
-                  ))
-                }
-              </div>
-            </div>
-          </a>
-        ))}
-      </div>
-    ) : (
-      <div class="empty">
-        <p>还没有文章。去 <code>src/content/posts/</code> 放一篇吧，或者运行 <code>npm run new-post</code> 自动创建。</p>
-      </div>
-    )
-  }
+  {posts.length > 0 ? (
+    <PostList posts={posts} showCategory={hc === 'all' || Array.isArray(hc)} />
+  ) : (
+    <div class="empty">
+      <p>这个分类下还没有文章。发帖时在开头写上 <code>category:</code> 就能归类。</p>
+    </div>
+  )}
 </Layout>
