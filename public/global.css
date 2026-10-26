@@ -69,7 +69,7 @@ body {
   top: 0;
   z-index: 50;
 }
-.header-inner { display: flex; justify-content: space-between; align-items: center; gap: 16px; height: 62px; }
+.header-inner { display: flex; justify-content: space-between; align-items: center; gap: 16px; height: 62px; max-width: 940px; }
 .brand { display: inline-flex; align-items: center; gap: 10px; text-decoration: none; color: var(--fg); }
 .brand-mark {
   width: 14px; height: 14px; border-radius: 5px; flex: none;
@@ -114,7 +114,6 @@ body {
   outline: none;
   border-color: var(--baby);
   box-shadow: 0 0 0 3px var(--baby-soft);
-  width: 190px;
 }
 .search-results {
   position: absolute; top: calc(100% + 8px); right: 0;

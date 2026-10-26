@@ -14,7 +14,6 @@ const tags = [...counts.entries()].sort((a, b) => b[1] - a[1] || a[0].localeComp
 <Layout title="标签" description="博客用过的所有标签">
   <header class="cat-header">
     <h1>标签</h1>
-    <p class="lead">用过的所有标签 · 共 {tags.length} 个</p>
   </header>
   {tags.length > 0 ? (
     <div class="tag-cloud">
