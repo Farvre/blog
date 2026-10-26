@@ -17,7 +17,7 @@ const posts = (await getCollection('posts'))
 
 <Layout title={info.label} description={info.intro}>
   <header class="cat-header">
-    <h1>{info.label}<span class="accent-bar"></span></h1>
+    <h1>{info.label}</h1>
     <p class="lead">{info.intro} · 共 {posts.length} 篇</p>
   </header>
   {posts.length > 0 ? (

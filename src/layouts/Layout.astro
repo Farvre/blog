@@ -14,6 +14,7 @@ const nav = [
   { href: '/essays/', label: '随笔' },
   { href: '/journal/', label: '事记' },
   { href: '/memo/', label: 'memo' },
+  { href: '/tags/', label: '标签' },
   { href: '/about/', label: '关于' },
 ];
 const path = Astro.url.pathname;
@@ -55,6 +56,16 @@ const isActive = (href: string) =>
             </a>
           ))}
         </div>
+        <div class="nav-search">
+          <input
+            id="nav-search-input"
+            type="search"
+            placeholder="搜索…"
+            aria-label="搜索文章"
+            autocomplete="off"
+          />
+          <div id="nav-search-results" class="search-results" hidden></div>
+        </div>
       </nav>
     </header>
     <main class="container">
@@ -62,8 +73,47 @@ const isActive = (href: string) =>
     </main>
     <footer class="site-footer">
       <div class="container">
-        <p>© {new Date().getFullYear()} {siteTitle} · 用心记录每一个瞬间</p>
+        <p>© {new Date().getFullYear()} {siteTitle} · Powered by Astro · Hosted on Netlify</p>
       </div>
     </footer>
+    <script>
+      // 导航栏搜索：读取构建时生成的 /search.json，边打字边出结果
+      const input = document.getElementById('nav-search-input') as HTMLInputElement | null;
+      const box = document.getElementById('nav-search-results') as HTMLDivElement | null;
+      let index: { title: string; url: string; date: string; tags: string[]; text: string }[] | null = null;
+
+      const esc = (s: string) =>
+        s.replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[c]!);
+
+      async function getIndex() {
+        if (!index) index = await (await fetch('/search.json')).json();
+        return index;
+      }
+
+      input?.addEventListener('input', async () => {
+        if (!box) return;
+        const q = input.value.trim().toLowerCase();
+        if (!q) { box.hidden = true; return; }
+        const items = (await getIndex()).filter((x) =>
+          (x.title + ' ' + x.tags.join(' ') + ' ' + x.text).toLowerCase().includes(q)
+        ).slice(0, 6);
+        box.innerHTML = items.length
+          ? items.map((x) => `<a class="s-item" href="${x.url}"><span class="s-title">${esc(x.title)}</span><span class="s-meta">${x.date}</span></a>`).join('')
+          : '<div class="s-empty">没有找到相关文章</div>';
+        box.hidden = false;
+      });
+
+      input?.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter') {
+          const first = box?.querySelector('a');
+          if (first) location.href = first.getAttribute('href')!;
+        }
+        if (e.key === 'Escape' && box) box.hidden = true;
+      });
+
+      document.addEventListener('click', (e) => {
+        if (box && !(e.target as HTMLElement).closest('.nav-search')) box.hidden = true;
+      });
+    </script>
   </body>
 </html>

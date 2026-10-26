@@ -1,0 +1,32 @@
+---
+// 标签总览页：显示所有用过的标签，右上角小数字 = 用过几次
+import Layout from '../../layouts/Layout.astro';
+import { getCollection } from 'astro:content';
+
+const posts = (await getCollection('posts')).filter((p) => !p.data.draft);
+const counts = new Map<string, number>();
+for (const p of posts) {
+  for (const t of p.data.tags ?? []) counts.set(t, (counts.get(t) ?? 0) + 1);
+}
+const tags = [...counts.entries()].sort((a, b) => b[1] - a[1] || a[0].localeCompare(b[0], 'zh'));
+---
+
+<Layout title="标签" description="博客用过的所有标签">
+  <header class="cat-header">
+    <h1>标签</h1>
+    <p class="lead">用过的所有标签 · 共 {tags.length} 个</p>
+  </header>
+  {tags.length > 0 ? (
+    <div class="tag-cloud">
+      {tags.map(([t, n]) => (
+        <a class="tag-chip" href={`/tags/${encodeURIComponent(t)}/`}>
+          #{t}<sup class="tag-count">{n}</sup>
+        </a>
+      ))}
+    </div>
+  ) : (
+    <div class="empty">
+      <p>还没有标签。发帖时在开头写上 <code>tags:</code> 就能出现在这里。</p>
+    </div>
+  )}
+</Layout>

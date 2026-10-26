@@ -24,7 +24,7 @@ const { posts, showCategory = false } = Astro.props;
           <div class="post-meta">
             {post.data.pubDate && <span class="date">{fmtDate(post.data.pubDate)}</span>}
             <span class="meta-sep">·</span>
-            <span>读完约 {stats.minutes} 分钟</span>
+            <span>{stats.minutes}min</span>
             <span class="meta-sep">·</span>
             <span>{stats.words.toLocaleString('zh-CN')} 字</span>
             <span class="meta-sep">·</span>
