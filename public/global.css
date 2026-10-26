@@ -70,7 +70,7 @@ body {
   z-index: 50;
 }
 .header-inner { display: flex; justify-content: space-between; align-items: center; gap: 16px; height: 62px; max-width: 940px; }
-.brand { display: inline-flex; align-items: center; gap: 10px; text-decoration: none; color: var(--fg); }
+.brand { display: inline-flex; align-items: center; gap: 10px; text-decoration: none; color: var(--fg); margin-right: auto; }
 .brand-mark {
   width: 14px; height: 14px; border-radius: 5px; flex: none;
   background: linear-gradient(135deg, var(--baby), var(--accent));
@@ -98,7 +98,7 @@ body {
 .nav-link.active::after { transform: scaleX(1); background: var(--accent); }
 
 /* 导航栏搜索 */
-.nav-search { position: relative; margin-left: auto; }
+.nav-search { position: relative; }
 .nav-search input {
   width: 150px;
   padding: 6px 14px;
@@ -136,7 +136,7 @@ body {
 .search-results .s-empty { padding: 12px 14px; color: var(--muted); font-size: .85rem; }
 
 /* ---------- 主体 ---------- */
-main { flex: 1; padding: 38px 0 56px; }
+main { flex: 1; padding: 58px 0 64px; }
 h1, h2, h3, h4 { font-family: var(--font-head); font-weight: 700; letter-spacing: .02em; line-height: 1.4; }
 
 /* 首页头部 */
@@ -192,8 +192,12 @@ h1, h2, h3, h4 { font-family: var(--font-head); font-weight: 700; letter-spacing
 .cat-header .lead { color: var(--muted); }
 
 /* ---------- 文章页 ---------- */
-.post-header { margin-bottom: 26px; }
+.post-header { margin-bottom: 30px; }
 .post-header h1 { font-size: 2.15rem; line-height: 1.35; margin-bottom: 14px; }
+.crumb { color: var(--muted); }
+.crumb a { color: var(--accent); text-decoration: none; border-bottom: 1px solid var(--baby-soft); }
+.crumb a:hover { color: var(--accent-strong); border-bottom-color: var(--accent); }
+.post-sub { color: var(--muted); margin-top: 14px; font-size: 1.02rem; }
 .post-single-cover { width: 100%; max-height: 420px; object-fit: cover; border-radius: var(--radius); margin-bottom: 26px; }
 .prose { font-size: 1.05rem; }
 .prose p { margin-bottom: 1.15em; }
