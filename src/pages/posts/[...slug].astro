@@ -13,7 +13,8 @@ export async function getStaticPaths() {
 }
 
 const { post } = Astro.props;
-const { Content } = await render(post);
+const { Content, headings } = await render(post);
+const toc = headings.filter((h) => h.depth === 2 || h.depth === 3);
 const stats = postStats(post.body);
 const byline = `由 ${post.data.author} ${post.data.generated ? '生成' : '写'}`;
 const cat = categories[post.data.category];
@@ -23,7 +24,6 @@ const walineServer = siteConfig.walineServerURL;
 <Layout title={post.data.title} description={post.data.description}>
   <article>
     <header class="post-header">
-      <h1>{post.data.title}</h1>
       <div class="post-meta">
         <span class="crumb">
           <a href="/">Home</a> {'<'} <a href={cat.path}>{cat.label}</a>
@@ -37,8 +37,22 @@ const walineServer = siteConfig.walineServerURL;
         <span class="meta-sep">·</span>
         <span>{byline}</span>
       </div>
+      <h1>{post.data.title}</h1>
       {post.data.description && <p class="post-sub">{post.data.description}</p>}
     </header>
+
+    {toc.length > 1 && (
+      <details class="toc" open>
+        <summary>目录</summary>
+        <ul>
+          {toc.map((h) => (
+            <li class={`toc-depth-${h.depth}`}>
+              <a href={`#${h.slug}`}>{h.text}</a>
+            </li>
+          ))}
+        </ul>
+      </details>
+    )}
 
     {post.data.cover && <img class="post-single-cover" src={post.data.cover} alt="" />}
 

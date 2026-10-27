@@ -1,11 +1,32 @@
 ---
 import Layout from '../layouts/Layout.astro';
 ---
-<Layout title="关于" description="关于这个博客">
-  <div class="about-card">
-    <h1>关于我</h1>
-    <p>欢迎来到我的博客！这里记录我的生活、想法和作品。</p>
-    <p>可以在这里放你的自我介绍、联系方式等。</p>
-    <p>这个网站由 <strong>shuangyun</strong> 维护。</p>
+<Layout title="关于" description="关于 shuangyun 和这个博客">
+  <div class="about">
+    <div class="about-hero">
+      <div class="about-avatar" aria-hidden="true">S</div>
+      <h1>shuangyun</h1>
+      <p class="about-tagline">记录生活、想法，和所有值得留下的瞬间。</p>
+      <div class="about-links">
+        <a href="/">博客</a>
+        <a href="https://github.com/Farvre" target="_blank" rel="noopener">GitHub</a>
+      </div>
+    </div>
+
+    <div class="about-body">
+      <p>欢迎来到我的博客！这里记录我的生活、想法和作品。</p>
+      <p>可以在这里放你的自我介绍、联系方式等。</p>
+    </div>
+
+    <div class="about-cards">
+      <section class="about-card">
+        <h2>关于这个博客</h2>
+        <p>用 Astro 搭建，托管在 Netlify。所有文章都会标注来源：自己写的署名「由 shuangyun 写」，AI 参与的署名「由 模型名 生成」。</p>
+      </section>
+      <section class="about-card">
+        <h2>联系我</h2>
+        <p>想说点什么？在任意文章底部留言就行，填个昵称即可，不需要登录。</p>
+      </section>
+    </div>
   </div>
 </Layout>
