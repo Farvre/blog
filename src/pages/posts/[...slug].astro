@@ -85,6 +85,27 @@ const walineServer = siteConfig.walineServerURL;
   {walineServer && (
     <Fragment slot="head">
       <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@waline/client@3/dist/waline.css" />
+      <style is:global>
+        /* ====== 评论区小改造 ====== */
+        /* 1) 去掉「预览」按钮：编辑器工具条里最后一个按钮就是它 */
+        #waline .wl-editor .wl-actions > button.wl-action:last-of-type,
+        #waline .wl-editor .wl-actions button[title='预览'] {
+          display: none !important;
+        }
+        /* 2) 不允许附图：上传按钮（label）与隐藏的 file input 一并隐藏 */
+        #waline .wl-editor .wl-actions > label.wl-action,
+        #waline .wl-editor .wl-actions > input.upload {
+          display: none !important;
+        }
+        /* 3) 排序合并成一个「切到另一种顺序」的按钮：
+              正序（active）时只显示「按倒序」，倒序时只显示「按正序」 */
+        #waline .wl-sort { display: inline-flex !important; }
+        #waline .wl-sort > li { display: none !important; }
+        #waline .wl-sort > li:nth-child(1):not(.active),
+        #waline .wl-sort > li:nth-child(2):not(.active) {
+          display: inline-block !important;
+        }
+      </style>
     </Fragment>
   )}
 </Layout>
@@ -131,6 +152,8 @@ const walineServer = siteConfig.walineServerURL;
       meta: ['nick', 'mail', 'link'],
       pageview: true,
       comment: true,
+      noRss: true,          // 去掉「订阅本文/本站评论」的 RSS 入口
+      imageUploader: null,  // 不允许附图
     });
   }
 </script>
