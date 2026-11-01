@@ -18,7 +18,7 @@ export const siteConfig = {
   // 评论系统 Waline 的服务地址。
   // 部署好 Waline 之后，把它给你的地址填在这里，例如 'https://xxx.vercel.app'
   // 不填的话，文章底部不会显示评论框。
-  walineServerURL: '',
+  walineServerURL: 'https://melodic-meerkat-c2b6cb.netlify.app/.netlify/functions/comment',
 };
 
 // 三个分类的展示信息（一般不用改）
