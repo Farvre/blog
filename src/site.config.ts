@@ -13,7 +13,7 @@ export const siteConfig = {
   //   'memo'   = 只显示「memo」
   //   'all'    = 显示全部
   //   也可以写成数组，例如 ['suibi', 'memo']
-  homeCategories: 'suibi' as 'suibi' | 'shiji' | 'memo' | 'all' | Array<'suibi' | 'shiji' | 'memo'>,
+  homeCategories: 'all' as 'suibi' | 'shiji' | 'memo' | 'all' | Array<'suibi' | 'shiji' | 'memo'>,
 
   // 评论系统 Waline 的服务地址。
   // 部署好 Waline 之后，把它给你的地址填在这里，例如 'https://xxx.vercel.app'
