@@ -1,7 +1,7 @@
 /* ==========================================================
    shuangyun 的博客 —— 全局样式
-   主色：baby blue #89CFF0（点缀/装饰）
-   正文链接用同色系深蓝 #2378b8，保证可读性
+   配色：Material Design 3（Tonal Spot），由基准色 #3166BE 派生
+   primary #245cb3 / primaryContainer #d8e2ff 等全套色调
    字体：英文 Google Sans；中文 思源黑体（正文）/ 思源宋体（标题）
 
    目录：
@@ -18,18 +18,20 @@
 
 /* ---------- 1. 设计变量 ---------- */
 :root {
-  /* 颜色：正文对比度 ≥ 12:1，次要文字 ≥ 5:1，链接 ≥ 4.5:1（白底） */
-  --bg: #f7fbfe;
-  --fg: #22303c;
-  --muted: #5c6b78;
-  --accent: #2378b8;          /* 链接、强调文字（深一档的 baby blue，保证对比度） */
-  --accent-strong: #1a5f96;   /* 标题强调、按钮文字；比 --accent 再深一档 */
-  --baby: #89cff0;            /* baby blue：装饰、hover、高亮 */
-  --baby-soft: rgba(137, 207, 240, 0.28);
-  --accent-light: #e9f5fc;
-  --border: #e2ecf4;
+  /* 颜色：Material Design 3 Tonal Spot，派生自基准色 #3166BE
+     正文对比度 ≥ 12:1，次要文字 ≥ 5:1，链接 ≥ 4.5:1（白底） */
+  --bg: #fefbff;              /* M3 surface */
+  --fg: #1b1b1f;              /* M3 onSurface */
+  --muted: #44474f;           /* M3 onSurfaceVariant */
+  --accent: #245cb3;          /* M3 primary（链接、强调文字，6.3:1） */
+  --accent-strong: #004494;   /* M3 primary tonal 30（标题强调、按钮文字，9.1:1） */
+  --baby: #adc6ff;            /* M3 primary tonal 80：装饰、hover、高亮 */
+  --baby-soft: rgba(173, 198, 255, 0.28);
+  --accent-light: #d8e2ff;    /* M3 primaryContainer */
+  --on-accent: #ffffff;       /* M3 onPrimary：填充按钮/徽章上的文字 */
+  --border: #c4c6d0;          /* M3 outlineVariant */
   --card-bg: #ffffff;
-  --code-bg: #f1f6fa;
+  --code-bg: #eef0fd;         /* 基准色相的浅色调容器（tone 95） */
 
   /* 圆角：小件 / 通用容器 / 大块 */
   --radius-sm: 10px;
@@ -54,25 +56,27 @@
   --fs-h3: 1.22rem;
   --fs-small: .85rem;
 
-  --shadow: 0 2px 6px rgba(35, 120, 184, 0.06), 0 10px 28px rgba(35, 120, 184, 0.08);
-  --shadow-hover: 0 4px 12px rgba(35, 120, 184, 0.10), 0 16px 36px rgba(35, 120, 184, 0.14);
+  --shadow: 0 2px 6px rgba(36, 92, 179, 0.06), 0 10px 28px rgba(36, 92, 179, 0.08);
+  --shadow-hover: 0 4px 12px rgba(36, 92, 179, 0.10), 0 16px 36px rgba(36, 92, 179, 0.14);
   --font-body: 'Google Sans', 'Noto Sans SC', 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', sans-serif;
   --font-head: 'Google Sans', 'Noto Sans SC', 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', sans-serif;
   --font-mono: 'SFMono-Regular', Consolas, 'Liberation Mono', monospace;
 }
 @media (prefers-color-scheme: dark) {
   :root {
-    --bg: #0e1721;
-    --fg: #e7f0f7;
-    --muted: #94a5b3;
-    --accent: #89cff0;
-    --accent-strong: #b3e2f7;
-    --baby: #89cff0;
-    --baby-soft: rgba(137, 207, 240, 0.16);
-    --accent-light: #17242f;
-    --border: #22323f;
-    --card-bg: #14202b;
-    --code-bg: #17242f;
+    /* 深色方案同为 M3 Tonal Spot：深蓝调 tinted surface */
+    --bg: #181c25;              /* tinted surface（tone 10） */
+    --fg: #e3e2e6;              /* M3 onSurface */
+    --muted: #c4c6d0;           /* M3 onSurfaceVariant */
+    --accent: #adc6ff;          /* M3 primary */
+    --accent-strong: #d8e2ff;   /* M3 primary tonal 90 */
+    --baby: #80aaff;            /* M3 primary tonal 70 */
+    --baby-soft: rgba(128, 170, 255, 0.16);
+    --accent-light: #252c3c;    /* 深色 tinted primaryContainer（tone 18） */
+    --on-accent: #002e69;       /* M3 onPrimary */
+    --border: #303541;          /* 深色 tinted outlineVariant（tone 22） */
+    --card-bg: #1f2635;
+    --code-bg: #252c3c;
     --shadow: 0 2px 6px rgba(0, 0, 0, 0.25), 0 10px 28px rgba(0, 0, 0, 0.28);
     --shadow-hover: 0 4px 12px rgba(0, 0, 0, 0.3), 0 16px 36px rgba(0, 0, 0, 0.34);
   }
@@ -391,7 +395,7 @@ h1, h2, h3, h4 {
 }
 .like-btn:hover { transform: scale(1.04); }
 .like-btn:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; }
-.like-btn.liked { background: var(--accent); color: #fff; border-color: var(--accent); }
+.like-btn.liked { background: var(--accent); color: var(--on-accent); border-color: var(--accent); }
 .like-btn svg { width: 16px; height: 16px; }
 .like-count { font-size: .88rem; color: var(--muted); }
 
@@ -428,8 +432,8 @@ h1, h2, h3, h4 {
   width: 92px; height: 92px;
   margin: 0 auto 20px;
   border-radius: 50%;
-  background: linear-gradient(135deg, var(--baby), var(--accent));
-  color: #fff;
+  background: linear-gradient(135deg, var(--accent-strong), var(--accent));
+  color: var(--on-accent);
   font-family: var(--font-head);
   font-size: 2.3rem; font-weight: 700;
   display: flex; align-items: center; justify-content: center;
@@ -444,7 +448,7 @@ h1, h2, h3, h4 {
   padding: 7px 20px; font-size: .92rem;
   transition: background .15s ease, color .15s ease;
 }
-.about-links a:hover { background: var(--accent); color: #fff; border-color: var(--accent); }
+.about-links a:hover { background: var(--accent); color: var(--on-accent); border-color: var(--accent); }
 .about-body { max-width: 540px; margin: 30px auto 0; }
 .about-body p { color: var(--muted); margin-bottom: 12px; line-height: 1.9; }
 .about-cards {
