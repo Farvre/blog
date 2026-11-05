@@ -19,7 +19,9 @@
 /* ---------- 1. 设计变量 ---------- */
 :root {
   /* 颜色：Material Design 3 Tonal Spot，派生自基准色 #3166BE
-     正文对比度 ≥ 12:1，次要文字 ≥ 5:1，链接 ≥ 4.5:1（白底） */
+     正文对比度 ≥ 12:1，次要文字 ≥ 5:1，链接 ≥ 4.5:1（白底）
+     深浅模式：html[data-theme] 由页头脚本设置（用户选择 > 系统偏好） */
+  color-scheme: light;
   --bg: #fefbff;              /* M3 surface */
   --fg: #1b1b1f;              /* M3 onSurface */
   --muted: #44474f;           /* M3 onSurfaceVariant */
@@ -62,9 +64,9 @@
   --font-head: 'Google Sans', 'Noto Sans SC', 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', sans-serif;
   --font-mono: 'SFMono-Regular', Consolas, 'Liberation Mono', monospace;
 }
-@media (prefers-color-scheme: dark) {
-  :root {
+:root[data-theme='dark'] {
     /* 深色方案同为 M3 Tonal Spot：深蓝调 tinted surface */
+    color-scheme: dark;
     --bg: #181c25;              /* tinted surface（tone 10） */
     --fg: #e3e2e6;              /* M3 onSurface */
     --muted: #c4c6d0;           /* M3 onSurfaceVariant */
@@ -79,7 +81,6 @@
     --code-bg: #252c3c;
     --shadow: 0 2px 6px rgba(0, 0, 0, 0.25), 0 10px 28px rgba(0, 0, 0, 0.28);
     --shadow-hover: 0 4px 12px rgba(0, 0, 0, 0.3), 0 16px 36px rgba(0, 0, 0, 0.34);
-  }
 }
 
 /* ---------- 2. 基础元素 ---------- */
@@ -133,15 +134,26 @@ img, video { height: auto; }
   align-items: center;
   gap: 10px;
   min-width: 0;                    /* 允许站名在空间不足时收缩，而不是把布局撑开 */
-  text-decoration: none;
-  color: var(--fg);
   margin-right: auto;
 }
+.brand-home {
+  display: inline-flex;
+  min-width: 0;
+  color: inherit;
+  text-decoration: none;
+}
 .brand-mark {
-  width: 14px; height: 14px; border-radius: 5px; flex: none;
+  width: 16px; height: 16px; border-radius: 6px; flex: none;
   background: linear-gradient(135deg, var(--baby), var(--accent));
   box-shadow: 0 2px 8px var(--baby-soft);
+  border: none; padding: 0;
+  cursor: pointer;
+  transition: transform .25s ease;
 }
+/* 色块 = 浅色/深色模式切换按钮 */
+.brand-mark:hover { transform: rotate(45deg) scale(1.15); }
+.brand-mark:active { transform: rotate(90deg) scale(1.05); }
+.brand-mark:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; }
 .brand-text {
   font-family: var(--font-head);
   font-weight: 700;
@@ -441,14 +453,6 @@ h1, h2, h3, h4 {
 }
 .about-hero h1 { font-size: 2rem; margin-bottom: 10px; }
 .about-tagline { color: var(--muted); font-size: 1.05rem; }
-.about-links { display: flex; justify-content: center; flex-wrap: wrap; gap: 12px; margin: 22px 0 6px; }
-.about-links a {
-  color: var(--accent); text-decoration: none;
-  border: 1px solid var(--baby); border-radius: var(--radius-pill);
-  padding: 7px 20px; font-size: .92rem;
-  transition: background .15s ease, color .15s ease;
-}
-.about-links a:hover { background: var(--accent); color: var(--on-accent); border-color: var(--accent); }
 .about-body { max-width: 540px; margin: 30px auto 0; }
 .about-body p { color: var(--muted); margin-bottom: 12px; line-height: 1.9; }
 .about-cards {
